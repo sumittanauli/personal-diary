@@ -1,3 +1,6 @@
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 from flask import (
     Flask, 
     request, 
@@ -11,13 +14,16 @@ import requests
 from datetime import datetime
 from bson import ObjectId
 
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
 app = Flask(__name__)
 
-password = 'sparta'
-cxn_str = f'mongodb+srv://test:{password}@cluster0.atoqiqv.mongodb.net/?retryWrites=true&w=majority'
-client = MongoClient(cxn_str)
+cxn_str = os.environ.get("cxn_str")
+DB_NAME =  os.environ.get("DB_NAME")
 
-db = client.dbsparta_plus_week2
+client = MongoClient(cxn_str)
+db = client[DB_NAME]
 
 @app.route('/')
 def main():
